@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Request</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #FFF9C4;
+            margin: 0;
+            overflow: hidden;
+        }
+        .phone-frame {
+            width: 280px;
+            height: 550px;
+            border: 5px solid #333;
+            border-radius: 36px;
+            position: relative;
+            background-color: #FFFDE7;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            padding-top: 40px;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .header .back-arrow {
+            font-size: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .header .title {
+            flex-grow: 1;
+            text-align: center;
+        }
+
+        .header .time {
+            font-size: 12px;
+            color: gray;
+            text-align: right;
+        }
+
+        .content {
+            padding: 15px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .booking-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background-color: #FFF;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-details {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .booking-details p {
+            margin: 5px 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .action-buttons button {
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .accept-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .accept-button:hover {
+            background-color: #45a049;
+        }
+
+        .decline-button {
+            background-color: #F44336;
+            color: white;
+        }
+
+        .decline-button:hover {
+            background-color: #e53935;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 70%;
+            max-width: 300px;
+        }
+
+        .modal button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .confirm-button {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .cancel-button {
+            background-color: #F44336;
+            color: white;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            color: rgb(27, 26, 26);
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="header">
+            <a href="booking.html" class="back-btn">&lt;</a>
+            <span class="title">Booking Request</span>
+        </div>
+
+        <div class="content" id="bookingList">
+            <!-- Booking items will be added here dynamically -->
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p id="modalMessage"></p>
+            <button id="confirmAction" class="confirm-button">Yes</button>
+            <button id="cancelModal" class="cancel-button">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        const bookings = JSON.parse(localStorage.getItem('bookings')) || [];
+        const bookingList = document.getElementById('bookingList');
+        const modal = document.getElementById('modal');
+        const confirmActionButton = document.getElementById('confirmAction');
+        const cancelModalButton = document.getElementById('cancelModal');
+
+        let currentBooking = null;
+        let actionType = null;
+
+        // Dynamically populate booking items
+        if (bookings.length > 0) {
+            bookings.forEach((booking, index) => {
+                const bookingItem = document.createElement('div');
+                bookingItem.classList.add('booking-item');
+                bookingItem.innerHTML = `
+                    <div class="booking-details">
+                        <p><strong>${booking.name}</strong></p>
+                        <p>Package: ${booking.package}</p>
+                        <p>Date: ${booking.date}</p>
+                        <p>Time: ${booking.time}</p>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="accept-button" onclick="openModal('accept', ${index})">Accept</button>
+                        <button class="decline-button" onclick="openModal('decline', ${index})">Decline</button>
+                    </div>
+                `;
+                bookingList.appendChild(bookingItem);
+            });
+        } else {
+            bookingList.innerHTML = '<p>No bookings yet.</p>';
+        }
+
+        function openModal(action, index) {
+            currentBooking = index;
+            actionType = action;
+
+            if (action === 'accept') {
+                document.getElementById('modalMessage').textContent = 'Are you sure you want to accept this booking?';
+            } else if (action === 'decline') {
+                document.getElementById('modalMessage').textContent = 'Are you sure you want to decline this booking?';
+            }
+
+            modal.style.display = 'flex';
+
+            confirmActionButton.onclick = function() {
+                updateBookingStatus(actionType);
+                modal.style.display = 'none';
+            };
+        }
+
+        function updateBookingStatus(status) {
+            const booking = bookings[currentBooking];
+            const buttons = document.querySelectorAll('.booking-item')[currentBooking].querySelector('.action-buttons');
+            
+            if (status === 'accept') {
+                buttons.innerHTML = `<button class="accept-button" disabled>Accepted</button>`;
+            } else if (status === 'decline') {
+                buttons.innerHTML = `<button class="decline-button" disabled>Declined</button>`;
+            }
+
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+        }
+
+        cancelModalButton.onclick = function() {
+            modal.style.display = 'none';
+        };
+    </script>
+</body>
+</html>

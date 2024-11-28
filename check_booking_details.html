@@ -1,0 +1,245 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat List Interface</title>
+
+    <!-- Google Font Link -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #FFF9C4;
+            flex-direction: column;
+        }
+
+        .phone-frame {
+            width: 300px;
+            height: 600px;
+            border: 5px solid #333;
+            border-radius: 36px;
+            background-color: #FFFDE7;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .phone-header {
+            height: 40px;
+            background-color: transparent;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            margin-top: 10px;
+            
+        }
+        .phone-header span {
+            flex-grow: 1;
+            text-align: left;
+            font-size: 20px;
+            margin-top: 3px;
+            color: #070707;
+            margin-left: 5px;
+        }
+        .back-arrow {
+            font-size: 22px;
+            cursor: pointer;
+        }
+        .phone-content {
+            padding: 20px;
+            font-size: 14px;
+        }
+        .booking-details {
+            margin-bottom: 10px;
+        }
+        .booking-details label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .booking-details span,
+        .booking-details input {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .action-buttons {
+            text-align: center;
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+        }
+        .action-buttons button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .cancel-btn {
+            background-color: #FF4D4D;
+            color: white;
+        }
+        .cancel-btn:hover {
+            background-color: #cc0000;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+        }
+        .modal-content h2 {
+            font-size: 18px;
+        }
+        .modal-buttons {
+            text-align: center;
+        }
+        .modal-buttons button {
+            padding: 10px 15px;
+            margin: 10px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .modal-yes {
+            background-color: #007BFF;
+            color: white;
+        }
+        .modal-no {
+            background-color: #FF4D4D;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <!-- Phone Header -->
+        <div class="phone-header">
+            <div class="back-arrow" onclick="goBack()">&lt;</div>
+            <span>Booking Details</span>
+        </div>
+
+        <!-- Content -->
+        <div class="phone-content">
+            <div class="booking-details">
+                <label for="customerName">Name:</label>
+                <input type="text" id="customerName" value="John Doe" readonly>
+            </div>
+            <div class="booking-details">
+                <label for="customerContact">Contact Info:</label>
+                <input type="text" id="customerContact" value="+123 456 7890 | johndoe@gmail.com" readonly>
+            </div>
+            <div class="booking-details">
+                <label for="customerLocation">Location:</label>
+                <input type="text" id="customerLocation" value="Central Park, NYC" readonly>
+            </div>
+            <div class="booking-details">
+                <label for="customerPackage">Package:</label>
+                <input type="text" id="customerPackage" value="Premium Package" readonly>
+            </div>
+            <div class="booking-details">
+                <label for="customerDateTime">Date & Time:</label>
+                <input type="text" id="customerDateTime" value="December 1, 2024 | 2:00 PM" readonly>
+            </div>
+            <div class="booking-details">
+                <label for="customerNotes">Additional Notes:</label>
+                <input type="text" id="customerNotes" value="The client requested candid shots and a sunset theme." readonly>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="cancel-btn" id="cancelButton" onclick="showCancelConfirmation()">Cancel Photoshoot</button>
+        </div>
+    </div>
+
+    <!-- Cancel Confirmation Modal -->
+    <div id="cancelModal" class="modal">
+        <div class="modal-content">
+            <h2>Are you sure you want to cancel this photoshoot?</h2>
+            <div class="modal-buttons">
+                <button class="modal-yes" onclick="confirmCancel()">Yes</button>
+                <button class="modal-no" onclick="closeModal('cancelModal')">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Success Modal -->
+    <div id="cancelSuccessModal" class="modal">
+        <div class="modal-content">
+            <h2>Photoshoot canceled successfully.</h2>
+            <div class="modal-buttons">
+                <button class="modal-yes" onclick="redirectToCheckBooking()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show the cancel confirmation modal
+        function showCancelConfirmation() {
+            document.getElementById("cancelModal").style.display = "block";
+        }
+
+        // Close the modal by its ID
+        function closeModal(modalId) {
+            var modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Confirm canceling the photoshoot
+        function confirmCancel() {
+            closeModal('cancelModal');  // Close confirmation modal
+            document.getElementById("cancelButton").innerText = "Cancelled";  // Change button text
+            document.getElementById("cancelSuccessModal").style.display = "block";  // Show success modal
+        }
+
+        // Redirect to the check_booking.html page
+        function redirectToCheckBooking() {
+            window.location.href = 'check_booking.html';  // Redirect to the check_booking.html page
+        }
+
+        // Go back to booking.html when clicking the back arrow
+        function goBack() {
+            window.location.href = 'booking.html';  // Redirect to booking.html
+        }
+    </script>
+</body>
+</html>

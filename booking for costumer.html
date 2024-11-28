@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Request</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #FFF9C4;
+            margin: 0;
+            overflow: hidden; /* Prevent both horizontal and vertical scrolling */
+        }
+        .phone-frame {
+            width: 280px;
+            height: 500px; /* Reduced height */
+            border: 5px solid #333;
+            border-radius: 36px;
+            position: relative;
+            background-color: #FFFDE7;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            padding-top: 30px; /* Reduced top padding */
+            overflow: hidden;
+            max-width: 100%; /* Prevent overflow on small screens */
+        }
+        .container {
+            width: 90%;
+            padding: 15px; /* Reduced padding */
+            background: #FFFDE7;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow-y: auto; /* Allow scrolling for longer forms */
+            max-height:500px; /* Limit the container height */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+        h1 {
+            font-size: 18px; /* Reduced font size */
+            margin-bottom: 15px;
+            text-align: center;
+            color: #555;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px; /* Reduced margin */
+            font-weight: bold;
+            font-size: 14px; /* Reduced font size */
+        }
+        input, select, textarea, button {
+            width: 90%;
+            padding: 8px; /* Reduced padding */
+            margin-bottom: 10px; /* Reduced margin */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px; /* Reduced font size */
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px; /* Increased font size for better readability */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .back-btn {
+            font-size: 24px;
+            color: rgb(27, 26, 26);
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 5px;
+            margin-top: -50px;
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="container">
+            <a href="search.html" class="back-btn">&lt;</a>
+            <h1>Photography Booking Form</h1>
+            <form id="bookingForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" placeholder="Your full name" required>
+                
+                <label for="contact">Contact Info:</label>
+                <input type="tel" id="contact" name="contact" placeholder="Phone or email" required>
+                
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" placeholder="Shoot location" required>
+                
+                <label for="package">Package:</label>
+                <select id="package" name="package" required>
+                    <option value="" disabled selected>Select a package</option>
+                    <option value="Basic">Basic Package</option>
+                    <option value="Standard">Standard Package</option>
+                    <option value="Premium">Premium Package</option>
+                </select>
+                
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+                
+                <label for="time">Time:</label>
+                <input type="time" id="time" name="time" required>
+                
+                <label for="add-info">Additional Information:</label>
+                <textarea id="add-info" name="add_info" rows="3" placeholder="Any specific requests or details..."></textarea>
+                
+                <button type="submit">Submit Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("bookingForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Get existing bookings from localStorage or initialize an empty array
+            const bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+
+            // Get form data
+            const booking = {
+                name: document.getElementById("name").value,
+                contact: document.getElementById("contact").value,
+                location: document.getElementById("location").value,
+                package: document.getElementById("package").value,
+                date: document.getElementById("date").value,
+                time: document.getElementById("time").value,
+                additionalInfo: document.getElementById("add-info").value
+            };
+
+            // Add the new booking to the bookings array
+            bookings.push(booking);
+
+            // Save back to localStorage
+            localStorage.setItem("bookings", JSON.stringify(bookings));
+
+            // Show success message or redirect
+            alert("Booking successfully submitted!");
+            window.location.href = "search.html"; // Redirect to booking request page
+        });
+    </script>
+</body>
+</html>

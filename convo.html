@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #FFF9C4; /* Light Yellow */
+        }
+        .phone-frame {
+            width: 260px;
+            height: 520px;
+            border: 5px solid #333;
+            border-radius: 36px;
+            position: relative;
+            background-color: #FFFDE7; /* Light Yellow */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px; /* Increased padding for top space */
+        }
+        .phone-frame::before {
+            content: "";
+            width: 50px;
+            height: 5px;
+            background-color: #FDD835; /* Yellow Accent */
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+
+        /* Main container for chat screen */
+        .chat-screen {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Navbar with chat name */
+        .navbar {
+            display: flex;
+            align-items: center;
+            background-color: #FFFDE7;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            font-size: 24px;
+            background-color: transparent;
+            color: #0c0c0c;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .chat-title {
+            font-size: 16px;
+            font-weight: bold;
+            flex: 1;
+            margin-left: 30px;
+        }
+
+        /* Chat Messages Container */
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #FFFDE7; /* Light Yellow for the chat message container */
+        }
+
+        /* Individual chat bubbles */
+        .message {
+            margin-bottom: 10px;
+            max-width: 70%;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Received message */
+        .message.received {
+            background-color: #e0e0e0;
+            align-self: flex-start;
+            border-top-left-radius: 0;
+        }
+
+        /* Sent message */
+        .message.sent {
+            background-color: #4f93ff;
+            color: white;
+            align-self: flex-end;
+            border-top-right-radius: 0;
+        }
+
+        /* Message input area */
+        .input-area {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background-color: #FFFDE7;
+            border-bottom-left-radius: 36px;
+            border-bottom-right-radius: 36px;
+        }
+
+        .input-area input[type="text"] {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+            margin-right: 10px;
+        }
+
+        .input-area button {
+            background-color: #4f93ff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-frame">
+    <div class="chat-screen">
+        <!-- Navbar -->
+        <div class="navbar">
+            <!-- Back Icon -->
+            <button class="back-btn" onclick="window.location.href='menu.html';">&lt;</button>
+            <!-- Chat Title -->
+            <div class="chat-title">Jenny Dulatree</div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chat-messages">
+            <div class="message sent">Hello! How can I help you with your photoshoot booking?</div>
+            <div class="message received">I wanted to check the available packages.</div>
+            <div class="message sent">Sure! Here are the packages we offer...</div>
+        </div>
+
+        <!-- Message Input Area -->
+        <div class="input-area">
+            <input type="text" id="message-input" placeholder="Type your message here...">
+            <button onclick="sendMessage()">▶</button>
+        </div> 
+    </div>
+</div>
+
+<script>
+    function sendMessage() {
+        // Get the input message
+        const messageInput = document.getElementById('message-input');
+        const messageText = messageInput.value.trim();
+
+        // If there is a message, add it to the chat
+        if (messageText !== "") {
+            // Create new message element for the customer's input
+            const customerMessage = document.createElement('div');
+            customerMessage.classList.add('message', 'received');
+            customerMessage.textContent = messageText;
+
+            // Append the new message from customer
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.appendChild(customerMessage);
+
+            // Scroll to the bottom of the chat
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Predefined photographer's response based on input
+            setTimeout(function() {
+                let photographerResponse = '';
+
+                if (messageText.toLowerCase().includes('package')) {
+                    photographerResponse = "We offer three main packages: Basic, Standard, and Premium. Would you like to know more about them?";
+                } else if (messageText.toLowerCase().includes('pricing')) {
+                    photographerResponse = "Our packages start at 1000. Let me know what you're looking for, and I'll help you choose the best package!";
+                } else if (messageText.toLowerCase().includes('availability')) {
+                    photographerResponse = "I have openings for next week. When would you like to schedule your photoshoot?";
+                } else {
+                    photographerResponse = "Thank you for your message! How can I assist you further?";
+                }
+
+                const photographerMessage = document.createElement('div');
+                photographerMessage.classList.add('message', 'sent');
+                photographerMessage.textContent = photographerResponse;
+                chatMessages.appendChild(photographerMessage);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1000); // Delay photographer's response for 1 second
+
+            // Clear the input field
+            messageInput.value = "";
+        }
+    }
+</script>
+
+</body>
+</html>

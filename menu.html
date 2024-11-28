@@ -1,0 +1,291 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat List Interface</title>
+
+    <!-- Google Font Link -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #FFF9C4;
+            flex-direction: column;
+        }
+
+        .phone-frame {
+            width: 300px;
+            height: 600px;
+            border: 5px solid #333;
+            border-radius: 36px;
+            background-color: #FFFDE7;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #ffffff00;
+            padding: 10px;
+            width: 100%;
+            border-top-left-radius: 36px;
+            border-top-right-radius: 36px;
+            margin-top: 20px;
+        }
+
+        .hamburger-icon {
+            width: 25px;
+            cursor: pointer;
+        }
+
+        .hamburger-icon div {
+            width: 100%;
+            height: 3px;
+            background-color: #333;
+            margin: 4px 0;
+        }
+
+        .navbar-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .help-icon {
+            font-size: 20px;
+            font-weight: 200;
+            margin-right: 3px;
+            cursor: pointer;
+            color: #050505;
+        }
+
+        .search-bar {
+            width: 90%;
+            padding: 5px 10px;
+            margin: 10px auto;
+            background-color: #FFF;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 3px 5px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .search-bar i {
+            margin-right: 8px;
+            color: #B0B0B0;
+            font-size: 16px;
+        }
+
+        .contact-list {
+            flex: 1;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-decoration: none;
+            
+        }
+
+        .contact-item:hover {
+            background-color: #FBC02D;
+        }
+
+        .contact-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contact-name {
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .last-message {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 50px;
+            border-radius: 0 0 36px 36px;
+            background-color: #FFFDE7;
+            box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #B0B0B0;
+            font-size: 1.5em;
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+        .nav-btn:hover {
+            color: #FFF;
+            background-color: #333;
+            border-radius: 50%;
+        }
+
+        .sidebar {
+    width: 0;
+    height: 80%;
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background-color: #FFFDE7;; /* Background color of the sidebar */
+    overflow-x: hidden;
+    transition: 0.3s;
+    padding-top: 60px;
+    color: #030303; /* Default text color */
+    
+}
+
+
+        .sidebar.active {
+            width: 250px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+    padding: 10px 20px;
+    text-align: left;
+    border-bottom: 1px solid #444;
+    cursor: pointer;
+    color: #000000; /* List item text color */
+}
+
+.sidebar li:hover {
+    background-color: #575757;
+    color: #FFD700; /* Text color on hover */
+}
+    </style>
+</head>
+<body>
+
+<div class="phone-frame">
+    <div class="navbar">
+        <div class="hamburger-icon">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="navbar-title">Chats</div>
+        <div class="help-icon">?</div>
+    </div>
+
+    <div class="sidebar">
+        <ul>
+            <li><a href="menu.html">Chats</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="portfolio.html">My Portfolio</a></li>
+            <li><a href="calendar.html">Calendar</a></li>
+            <li><a href="booking.html">Booking</a></li>
+        </ul>
+    </div>
+    
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search chats...">
+    </div>
+
+    <div class="contact-list">
+        <a href="convo.html" class="contact-item">
+            <img src="img/img1.jpg" alt="Profile Image">
+            <div class="contact-info">
+                <div class="contact-name">Jenny Dulatree</div>
+                <div class="last-message">You: Photoshoot booking</div>
+            </div>
+        </a>
+        <div class="contact-item">
+            <img src="img/img2.jpg" alt="Profile Image">
+            <div class="contact-info">
+                <div class="contact-name">Chen</div>
+                <div class="last-message">You: Here are the packages...</div>
+            </div>
+        </div>
+        <div class="contact-item">
+            <img src="img/img3.jpg" alt="Profile Image">
+            <div class="contact-info">
+                <div class="contact-name">Jordan</div>
+                <div class="last-message">How much? Thu</div>
+            </div>
+    
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <div class="nav-btn"><i class="fas fa-arrow-left"></i></div>
+        <div class="nav-btn"><i class="fas fa-home"></i></div>
+        <div class="nav-btn"><i class="fas fa-ellipsis-h"></i></div>
+    </div>
+</div>
+
+<script>
+    // Sidebar toggle functionality
+    document.querySelector('.hamburger-icon').addEventListener('click', function() {
+        document.querySelector('.sidebar').classList.toggle('active');
+    });
+
+    // Redirect to FAQ.html when the help icon is clicked
+    document.querySelector('.help-icon').addEventListener('click', function() {
+        window.location.href = 'FAQ.html';
+    });
+</script>
+
+</body>
+</html>

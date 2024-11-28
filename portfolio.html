@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .phone-frame {
+            width: 300px;
+            height: 600px;
+            border: 5px solid #333;
+            border-radius: 36px;
+            background-color: #FFFDE7; /* Light Yellow */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .phone-frame::before {
+            content: "";
+            width: 50px;
+            height: 5px;
+            background-color: #FFFDE7; /* Yellow Accent */
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        .screen {
+            width: 100%;
+            height: calc(100% - 50px); /* Leaves space for the phone frame border */
+            margin: 25px auto 0;
+            background-color: #FFFDE7;
+            border-radius: 24px;
+            box-sizing: border-box;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        h1 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+            margin-top: -20px;
+        }
+        .upload-section {
+            margin-bottom: 20px;
+        }
+        .upload-section input[type="text"], 
+        .upload-section input[type="file"], 
+        .upload-section button {
+            display: block;
+            width: 80%;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 14px;
+        }
+        .portfolio {
+            margin-top: 20px;
+        }
+        .event {
+            margin-bottom: 20px;
+        }
+        .event h2 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-transform: capitalize;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+        }
+        .image-item {
+            width: 100%;
+            padding-bottom: 100%; /* Maintain aspect ratio */
+            background-color: #ddd;
+            border-radius: 5px;
+            background-size: cover;
+            background-position: center;
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 10px;
+            font-size: 24px;
+            background-color: transparent;
+            color: #0c0c0c;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="screen">
+            <button class="back-btn" onclick="window.location.href='menu.html';">&lt;</button>
+            <h1>My Portfolio</h1>
+            <div class="upload-section">
+                <input type="text" id="customEventName" placeholder="Enter Event Name (e.g., Wedding, Birthday)">
+                <input type="file" id="fileInput" accept="image/*" multiple>
+                <button onclick="uploadImages()">Create Album</button>
+            </div>
+            <div class="portfolio" id="portfolio">
+                <!-- Albums for different events will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function uploadImages() {
+            const customEventName = document.getElementById('customEventName').value.trim();
+            const fileInput = document.getElementById('fileInput');
+            const portfolio = document.getElementById('portfolio');
+            const files = fileInput.files;
+
+            if (customEventName === "") {
+                alert("Please enter an event name!");
+                return;
+            }
+
+            // Check if event section already exists
+            let eventSection = document.querySelector(`#portfolio .event[data-event="${customEventName}"]`);
+            if (!eventSection) {
+                // Create new event section if it doesn't exist
+                eventSection = document.createElement('div');
+                eventSection.classList.add('event');
+                eventSection.setAttribute('data-event', customEventName);
+                eventSection.innerHTML = `
+                    <h2>${customEventName}</h2>
+                    <div class="image-grid"></div>
+                `;
+                portfolio.appendChild(eventSection);
+            }
+
+            const imageGrid = eventSection.querySelector('.image-grid');
+
+            for (const file of files) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const imageItem = document.createElement('div');
+                    imageItem.classList.add('image-item');
+                    imageItem.style.backgroundImage = `url('${e.target.result}')`;
+                    imageGrid.appendChild(imageItem);
+                };
+
+                reader.readAsDataURL(file);
+            }
+
+            // Clear the input fields after uploading
+            document.getElementById('customEventName').value = '';
+            fileInput.value = '';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <style>
+        /* General Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Phone Frame Styling */
+        .phone-frame {
+            width: 300px;
+            height: 600px;
+            border: 5px solid #333;
+            border-radius: 36px;
+            background-color: #FFFDE7; /* Light Yellow */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phone-frame::before {
+            content: "";
+            width: 50px;
+            height: 5px;
+            background-color: #FFFDE7; /* Yellow Accent */
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+
+        /* Screen Styling */
+        .screen {
+            width: 100%;
+            height: calc(100% - 50px); /* Leaves space for the phone frame border */
+            margin-top: 25px;
+            background-color: #FFFDE7;
+            border-radius: 24px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background-color: #e8e8e8;
+            border-bottom: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .back-btn {
+            font-size: 24px;
+            background-color: transparent;
+            color: #0c0c0c;
+            border: none;
+            cursor: pointer;
+        }
+
+        .time {
+            font-weight: bold;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .avatar {
+            position: relative;
+            display: inline-block;
+        }
+
+        .avatar img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+        }
+
+        .camera-icon {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            font-size: 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .username {
+            margin: 10px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Details Section */
+        .details-section {
+            padding: 10px 20px;
+        }
+
+        .dropdown {
+            margin-bottom: 20px;
+        }
+
+        .dropdown-button {
+            width: 100%;
+            padding: 10px;
+            background: #d0d0ff;
+            border: none;
+            border-radius: 5px;
+            text-align: left;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            margin-top: 5px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .dropdown.open .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-content input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .dropdown-content button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .dropdown-content button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <!-- Screen Content -->
+        <div class="screen">
+            <!-- Back Button -->
+            <button class="back-btn" aria-label="Go Back" onclick="window.location.href='menu.html';">&lt;</button>
+            
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <div class="avatar">
+                    <img id="profile-img" src="avatar-placeholder.png" alt="User Avatar">
+                    <button class="camera-icon" aria-label="Change Profile Picture" onclick="document.getElementById('file-input').click();">&#128247;</button>
+                </div>
+                <h2 class="username" id="username">John Doe</h2>
+            </div>
+            
+            <!-- Details Section -->
+            <div class="details-section">
+                <!-- Personal Details Dropdown -->
+                <div class="dropdown">
+                    <button class="dropdown-button" onclick="toggleDropdown(this)">Personal Details &#x25BC;</button>
+                    <div class="dropdown-content">
+                        <p>Name: <input type="text" id="edit-name" value="John Doe"></p>
+                        <p>Phone: <input type="text" id="edit-phone" value="123-456-7890"></p>
+                        <p>Location: <input type="text" id="edit-location" value="City, Country"></p>
+                        <button onclick="saveDetails()">Save</button>
+                    </div>
+                </div>
+
+                <!-- Change Password Dropdown -->
+                <div class="dropdown">
+                    <button class="dropdown-button" onclick="toggleDropdown(this)">Change Password &#x25BC;</button>
+                    <div class="dropdown-content">
+                        <input type="password" id="current-password" placeholder="Current Password">
+                        <input type="password" id="new-password" placeholder="New Password">
+                        <input type="password" id="confirm-password" placeholder="Confirm Password">
+                        <button onclick="changePassword()">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden File Input -->
+    <input type="file" id="file-input" accept="image/*" onchange="changeProfilePicture(event)" style="display: none;">
+
+    <script>
+        function toggleDropdown(button) {
+            const parent = button.parentElement;
+            parent.classList.toggle('open');
+        }
+
+        function changeProfilePicture(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('profile-img').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveDetails() {
+            const name = document.getElementById('edit-name').value;
+            const phone = document.getElementById('edit-phone').value;
+            const location = document.getElementById('edit-location').value;
+            alert(`Details Saved:\nName: ${name}\nPhone: ${phone}\nLocation: ${location}`);
+            document.getElementById('username').textContent = name;
+        }
+
+        function changePassword() {
+            const currentPassword = document.getElementById('current-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (newPassword !== confirmPassword) {
+                alert('New password and confirm password do not match!');
+                return;
+            }
+            alert('Password changed successfully!');
+        }
+    </script>
+</body>
+</html>

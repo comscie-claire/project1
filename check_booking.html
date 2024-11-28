@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Booking</title>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #FFF9C4; /* Light Yellow */
+            margin: 0;
+        }
+        .phone-frame {
+            width: 260px;
+            height: 520px;
+            border: 5px solid #333;
+            border-radius: 36px;
+            position: relative;
+            background-color: #FFFDE7; /* Light Yellow */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+            overflow: hidden;
+        }
+        .phone-frame::before {
+            content: "";
+            width: 50px;
+            height: 5px;
+            background-color: #FDD835; /* Yellow Accent */
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        .header {
+            background-color: transparent;
+            color: rgb(20, 20, 20);
+            padding: 10px;
+            font-size: 18px;
+            width: 100%;
+            position: sticky;
+            top: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .back-btn {
+            color: rgb(27, 26, 26);
+            font-size: 24px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+        .container {
+            padding: 16px;
+            width: 95%;
+            overflow-y: auto;
+        }
+        .booking-section {
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-weight: bold;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .booking-card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .booking-info div {
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        .arrow {
+            font-size: 18px;
+            color: #aaa;
+            text-decoration: none;
+        }
+        .arrow:hover {
+            color: #000;
+        }
+        .nav-bar {
+            width: 100%;
+            height: 50px;
+            background-color: transparent;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-radius: 0 0 36px 36px;
+            margin-top: auto;
+        }
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            background-color: transparent;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #B0B0B0;
+            font-size: 1.5em;
+        }
+        .nav-btn:hover {
+            color: #FFF;
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <!-- Header with back button and title on the same line -->
+        <div class="header">
+            <a href="booking.html" class="back-btn">&lt;</a>
+            <span>Check Booking</span>
+        </div>
+        <!-- Booking content -->
+        <div class="container">
+            <!-- November section -->
+            <div class="booking-section">
+                <div class="section-title">November</div>
+                <div class="booking-card">
+                    <div class="booking-info">
+                        <div><strong>Name:</strong> John Doe</div>
+                        <div><strong>Package:</strong> Premium</div>
+                        <div><strong>Date:</strong> 11/12/2024</div>
+                    </div>
+                    <a href="check_booking_details.html" class="arrow">></a> <!-- Clickable arrow -->
+                </div>
+                <div class="booking-card">
+                    <div class="booking-info">
+                        <div><strong>Name:</strong> Jane Smith</div>
+                        <div><strong>Package:</strong> Basic</div>
+                        <div><strong>Date:</strong> 11/15/2024</div>
+                    </div>
+                    <a href="check_booking_details.html" class="arrow">></a> <!-- Clickable arrow -->
+                </div>
+            </div>
+            <!-- December section -->
+            <div class="booking-section">
+                <div class="section-title">December</div>
+                <div class="booking-card">
+                    <div class="booking-info">
+                        <div><strong>Name:</strong> Alex Johnson</div>
+                        <div><strong>Package:</strong> Deluxe</div>
+                        <div><strong>Date:</strong> 12/09/2024</div>
+                    </div>
+                    <a href="check_booking_details.html" class="arrow">></a> <!-- Clickable arrow -->
+                </div>
+            </div>
+        </div>
+        <div class="nav-bar">
+            <div class="nav-btn"><i class="fas fa-bars"></i></div> <!-- Hamburger icon for menu -->
+            <div class="nav-btn"><i class="fas fa-home"></i></div> <!-- Home icon -->
+            <div class="nav-btn"><i class="fas fa-arrow-left"></i></div> <!-- Back icon -->
+        </div>
+    </div>
+</body>
+</html>

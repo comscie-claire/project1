@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photoshoot Booking Chatbot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #FFF9C4; /* Light Yellow */
+        }
+        .phone-frame {
+            width: 260px;
+            height: 520px;
+            border: 5px solid #333;
+            border-radius: 36px;
+            position: relative;
+            background-color: #FFFDE7; /* Light Yellow */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+        }
+        .phone-frame::before {
+            content: "";
+            width: 50px;
+            height: 5px;
+            background-color: #FFFDE7; /* Yellow Accent */
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            padding: 10px 20px;
+            margin-top: 11px;
+        }
+        .hamburger-icon {
+            width: 25px;
+            cursor: pointer;
+            margin-left: 9px;
+        }
+        .hamburger-icon div {
+            width: 100%;
+            height: 3px;
+            background-color: #333;
+            margin: 4px 0;
+        }
+        .navbar-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+        }
+        .help-icon {
+            font-size: 20px;
+            font-weight: 500;
+            cursor: pointer;
+            color: #050505;
+            margin-right: 10px;
+        }
+        .chat-container {
+            width: 70%;
+            height: 420px;
+            background-color: #FFFDE7;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+        .chat-container::-webkit-scrollbar {
+            width: 3px;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+        }
+        .chat-container::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+        .message {
+            background-color: #fff;
+            padding: 10px;
+            max-width: 200%;
+            border-radius: 10px;
+            margin: 10px 0;
+            word-wrap: break-word;
+            position: relative;
+        }
+        .message.right {
+            background-color: #d3e5ff;
+            align-self: flex-end;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            bottom: 10px;
+            width: 90%;
+        }
+        .input-container input {
+            width: 80%;
+            padding: 10px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            margin-right: 10px;
+        }
+        .input-container .send {
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 70%;
+            margin: 10px auto;
+            gap: 10px;
+        }
+        .button {
+            background-color: #fff;
+            color: rgb(10, 10, 10);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            width: 100%;
+        }
+        .button:hover {
+            background-color: #ffffffe8;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="navbar">
+            <div class="hamburger-icon">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="navbar-title">D'Cam Photography</div>
+            <div class="help-icon">?</div>
+        </div>
+        <div class="chat-container" id="chatFrame">
+            <div class="message">Welcome to D'CAM Photography! How can I assist you?</div>
+            <div class="message">Available packages: <br>1. Basic<br>2. Standard<br>3. Premium</div>
+            <div class="message">Or you can select an option:</div>
+            <div class="message clickable" onclick="redirectToPage('photoshoot-booking.html')">Photoshoot Booking</div>
+            <div class="message clickable" onclick="redirectToPage('reschedule.html')">Reschedule</div>
+            <div class="message clickable" onclick="redirectToPage('cancel-photoshoot.html')">Cancel</div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Type your message...">
+            <div class="send" onclick="sendMessage()">➤</div>
+        </div>
+    </div>
+
+    <script>
+        const botReplies = {
+            basic: "The Basic Package includes 1-hour photoshoot and 10 edited photos for ₱1,000.",
+            standard: "The Standard Package includes 2-hour photoshoot, 20 edited photos, and 1 printed album for ₱3,000.",
+            premium: "The Premium Package includes unlimited photoshoot time, 50 edited photos, 1 printed album, and video coverage for ₱5,000.",
+            fallback: "I'm sorry, I don't have details for that. Please ask about Basic, Standard, or Premium packages."
+        };
+
+        function sendMessage() {
+            const input = document.getElementById('userInput').value.trim().toLowerCase();
+            if (input) {
+                const chatFrame = document.getElementById('chatFrame');
+                const userMessage = document.createElement('div');
+                userMessage.className = 'message right';
+                userMessage.textContent = input;
+                chatFrame.appendChild(userMessage);
+                document.getElementById('userInput').value = '';
+
+                setTimeout(() => {
+                    const botMessage = document.createElement('div');
+                    botMessage.className = 'message';
+
+                    if (input.includes("basic")) {
+                        botMessage.textContent = botReplies.basic;
+                    } else if (input.includes("standard")) {
+                        botMessage.textContent = botReplies.standard;
+                    } else if (input.includes("premium")) {
+                        botMessage.textContent = botReplies.premium;
+                    } else {
+                        botMessage.textContent = botReplies.fallback;
+                    }
+
+                    chatFrame.appendChild(botMessage);
+                    chatFrame.scrollTop = chatFrame.scrollHeight;
+                }, 1000);
+            }
+        }
+
+        function redirectToPage(page) {
+            window.location.href = page;
+        }
+        document.querySelector('.help-icon').addEventListener('click', function() {
+        window.location.href = 'FAQ.html';
+    });
+    </script>
+</body>
+</html>

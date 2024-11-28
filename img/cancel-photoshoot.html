@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photoshoot Booking Chatbot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #FFF9C4; /* Light Yellow */
+        }
+        .phone-frame {
+            width: 260px;
+            height: 520px;
+            border: 5px solid #333;
+            border-radius: 36px;
+            position: relative;
+            background-color: #FFFDE7; /* Light Yellow */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px; /* Increased padding for top space */
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            padding: 10px 20px;
+            margin-top: 11px;
+        }
+        .hamburger-icon {
+            width: 25px;
+            cursor: pointer;
+            margin-left: 9px;
+        }
+        .hamburger-icon div {
+            width: 100%;
+            height: 3px;
+            background-color: #333;
+            margin: 4px 0;
+        }
+        .navbar-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+        }
+        .help-icon {
+            font-size: 20px;
+            font-weight: 200;
+            margin-right: 10px;
+            cursor: pointer;
+            color: #050505;
+            font-weight: 500;
+        }
+        .chat-container {
+            width: 90%;
+            height: 420px;
+            background-color: #FFFDE7;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        /* Styling the scrollbar */
+        .chat-container::-webkit-scrollbar {
+            width: 3px;
+        }
+        .chat-container::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+        }
+        .chat-container::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+        }
+        .chat-container::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+
+        .message {
+            background-color: #fff;
+            padding: 10px;
+            max-width: 90%;
+            border-radius: 10px;
+            margin: 10px 0;
+            word-wrap: break-word;
+            position: relative;
+        }
+        .message.right {
+            background-color: #d3e5ff;
+            align-self: flex-end;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            bottom: 10px;
+            width: 90%;
+        }
+        .input-container input {
+            width: 80%;
+            padding: 10px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+        .input-container .send {
+            font-size: 18px;
+            cursor: pointer;
+            color: #333;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 70%;
+            margin: 10px auto;
+            gap: 10px;
+        }
+        .button {
+            background-color: #fff;
+            color: rgb(10, 10, 10);
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            width: 100%;
+        }
+        .button:hover {
+            background-color: #ffffffe8;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="navbar">
+            <div class="hamburger-icon" onclick="toggleSidebar()">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+            <div class="navbar-title">D'Cam Photography</div>
+            <div class="help-icon">?</div>
+        </div>
+        <div class="chat-container" id="chatFrame">
+            <div class="message">Welcome to D'CAM Photography! How can I assist you?</div>
+            <div class="message">Type "cancel" to proceed with canceling your photoshoot.</div>
+            <div class="message clickable" onclick="redirectToPage('photoshoot-booking.html')">Photoshoot Booking</div>
+            <div class="message clickable" onclick="redirectToPage('reschedule.html')">Reschedule</div>
+            <div class="message clickable" onclick="redirectToPage('package.html')">Package</div>
+        </div>
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Type your message..." onfocus="this.value='';">
+            <div class="send" onclick="sendMessage()">➤</div>
+        </div>
+    </div>
+
+    <script>
+        const botReplies = {
+            cancel: "You are about to cancel your booking. Please confirm if you'd like to proceed.",
+            confirmCancel: "Your photoshoot has been successfully canceled. You will receive a confirmation email shortly.",
+            cancelPolicy: "Please note that cancellations must be made at least 24 hours before the scheduled photoshoot. If the cancellation is made within 24 hours, a fee may apply.",
+            missingDetails: "I couldn't find any booking with those details. Please make sure to provide your correct booking date and name.",
+            lateCancellation: "Unfortunately, we cannot process cancellations within 24 hours of the scheduled photoshoot. You may contact customer support for further assistance.",
+            askReschedule: "If you're considering rescheduling instead, type 'reschedule' to provide a new date and time for your photoshoot.",
+        };
+
+        function detectKeyword(input) {
+            if (input.includes("cancel")) return botReplies.cancel; 
+            if (input.includes("policy")) return botReplies.cancelPolicy;
+            if (input.includes("reschedule")) return botReplies.askReschedule;
+            return null;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput').value.trim().toLowerCase();
+            if (input) {
+                const chatFrame = document.getElementById('chatFrame');
+                const userMessage = document.createElement('div');
+                userMessage.className = 'message right';
+                userMessage.textContent = input;
+                chatFrame.appendChild(userMessage);
+                document.getElementById('userInput').value = '';
+                document.getElementById('userInput').focus();  // Focus back to input after sending message
+
+                setTimeout(() => {
+                    const botMessage = document.createElement('div');
+                    botMessage.className = 'message';
+                    const reply = detectKeyword(input);
+
+                    if (reply === botReplies.cancel) {
+                        botMessage.textContent = botReplies.cancel;
+                        const buttonContainer = document.createElement('div');
+                        buttonContainer.className = 'button-container';
+                        const yesButton = document.createElement('button');
+                        yesButton.textContent = 'Yes';
+                        yesButton.onclick = function() { confirmCancellation(true); };
+                        const noButton = document.createElement('button');
+                        noButton.textContent = 'No';
+                        noButton.onclick = function() { confirmCancellation(false); };
+                        buttonContainer.appendChild(yesButton);
+                        buttonContainer.appendChild(noButton);
+                        chatFrame.appendChild(buttonContainer);
+                    } else {
+                        botMessage.textContent = reply || "I'm sorry, I didn't quite catch that.";
+                    }
+
+                    chatFrame.appendChild(botMessage);
+                    chatFrame.scrollTop = chatFrame.scrollHeight;
+                }, 1000);
+            }
+        }
+
+        function confirmCancellation(confirm) {
+            const chatFrame = document.getElementById('chatFrame');
+            const confirmationMessage = document.createElement('div');
+            confirmationMessage.className = 'message';
+            confirmationMessage.textContent = confirm ? botReplies.confirmCancel : "Your cancellation request has been canceled. Let me know if you need any further assistance!";
+            chatFrame.appendChild(confirmationMessage);
+            chatFrame.scrollTop = chatFrame.scrollHeight;
+        }
+
+        function redirectToPage(page) {
+            window.location.href = page;
+        }
+        document.querySelector('.help-icon').addEventListener('click', function() {
+        window.location.href = 'FAQ.html';
+    });
+    </script>
+</body>
+</html>
